@@ -27,7 +27,7 @@ default_floating_border pixel 1
 
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
-exec --no-startup-id dex --autostart --environment i3
+#exec --no-startup-id dex --autostart --environment i3
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
@@ -38,7 +38,7 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
-exec --no-startup-id nm-applet
+#exec --no-startup-id nm-applet
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -131,6 +131,11 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
+
+
+#startup applications
+include ~/.config/i3/startup.conf
+
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
 bindsym $mod+2 workspace number $ws2
@@ -195,5 +200,66 @@ bindsym $mod+r mode "resize"
 #        status_command i3status
 #}
 
-exec_always --no-startup-id ~/.config/polybar/launch.sh --forest
+#exec_always --no-startup-id ~/.config/polybar/launch.sh --forest
+
+######################################
+# color settings for bar and windows #
+######################################
+
+# Define colors variables:
+set $darkbluetrans	 #08052be6
+set $darkblue		 #08052b
+set $lightblue		 #5294e2
+set $urgentred		 #471514
+set $white		 #ffffff
+set $black		 #000000
+set $purple		 #e345ff
+set $darkgrey		 #272C35
+set $reallyDarkGrey	 #222222
+set $grey		 #b0b5bd
+set $mediumgrey		 #8b8b8b
+set $yellowbrown	 #e1b700
+set $bg-color            #2f343f
+set $inactive-bg-color   #2f343f
+set $text-color          #f3f4f5
+set $inactive-text-color #676E7D
+set $urgent-bg-color     #E53935
+
+# window colors
+#class                  #border             bg                 text                 indicator   childborder
+client.focused          $bg-color           $bg-color          $text-color          #ededed
+client.unfocused        $inactive-bg-color  $inactive-bg-color $inactive-text-color #ededed
+client.focused_inactive $inactive-bg-color  $inactive-bg-color $inactive-text-color #ededed
+client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          #ededed
+
+
+# Start i3bar to display a workspace bar
+# (plus the system information i3status finds out, if available)
+bar {
+        font pango: Fira Code Mono 11
+        status_command i3blocks -c ~/.config/i3/i3blocks.conf
+        # status_command i3status -c ~/.config/i3/i3status.conf
+        position top
+        # it could be that you have no primary display set: set one (xrandr --output <output> --primary)
+        # reference: https://i3wm.org/docs/userguide.html#_tray_output
+	tray_output primary
+	tray_padding 4
+
+        # When strip_workspace_numbers is set to yes,
+        # any workspace that has a name of the form
+        # “[n][:][NAME]” will display only the name.
+        strip_workspace_numbers no
+        ##strip_workspace_name no
+
+        colors {
+        separator          $purple
+        background         $darkgrey
+        statusline         $white
+        #       name                     border 		bg		txt             indicator
+		focused_workspace	 $reallyDarkgrey        $reallyDarkgrey	$grey	        $purple
+		active_workspace	 $lightblue             $mediumgrey	$darkgrey	$purple
+		inactive_workspace	 $darkgrey   	        $darkgrey	$grey		$purple
+		urgent_workspace	 $urgentred	        $urgentred	$white		$purple
+	}
+}
 
