@@ -240,6 +240,7 @@ bar {
         status_command i3blocks -c ~/.config/i3/i3blocks.conf
         # status_command i3status -c ~/.config/i3/i3status.conf
         position top
+	height 35
         # it could be that you have no primary display set: set one (xrandr --output <output> --primary)
         # reference: https://i3wm.org/docs/userguide.html#_tray_output
 	tray_output primary
