@@ -101,8 +101,11 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias code="code-insiders"
 
+alias daily="google-chrome --profile-directory=\"Profile 1\" https://meet.google.com/cxq-peab-hqi"
+
 source /etc/profile.d/golang_path.sh
 
+export PATH="$PATH:/opt/nvim/"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
