@@ -1,0 +1,7 @@
+{{- /* Per-machine answers, asked once on `chezmoi init` and kept in ~/.config/chezmoi/chezmoi.toml */ -}}
+{{- $hardware := promptBoolOnce . "hardware" "Install rootbook hardware packages" -}}
+{{- $work := promptBoolOnce . "work" "Install work packages" -}}
+
+[data]
+    hardware = {{ $hardware }}
+    work = {{ $work }}

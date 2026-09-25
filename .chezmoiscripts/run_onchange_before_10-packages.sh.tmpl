@@ -1,0 +1,34 @@
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/bin/bash
+# Installs the packages from .chezmoidata/packages.yaml that are missing.
+# Re-runs whenever the rendered list changes. Never removes anything.
+set -euo pipefail
+
+{{- $groups := list "base" "desktop" "apps" "cli" "devops" }}
+{{- if get . "hardware" }}{{ $groups = append $groups "hardware" }}{{ end }}
+{{- if get . "work" }}{{ $groups = append $groups "work" }}{{ end }}
+
+# groups: {{ $groups | join " " }}
+pacman_pkgs=(
+{{- range $g := $groups }}{{ range get (index $.packages $g) "pacman" | default list }}
+    {{ . }}
+{{- end }}{{ end }}
+)
+aur_pkgs=(
+{{- range $g := $groups }}{{ range get (index $.packages $g) "aur" | default list }}
+    {{ . }}
+{{- end }}{{ end }}
+)
+
+missing=$(pacman -T "${pacman_pkgs[@]}" || true)
+if [ -n "$missing" ]; then
+    echo "packages: installing from repos:" $missing
+    sudo pacman -S --needed $missing
+fi
+
+missing=$(pacman -T "${aur_pkgs[@]}" || true)
+if [ -n "$missing" ]; then
+    echo "packages: installing from AUR:" $missing
+    yay -S --needed --noconfirm $missing
+fi
+{{ end -}}
