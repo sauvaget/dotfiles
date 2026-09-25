@@ -1,0 +1,171 @@
+# Packages installed by chezmoi on Arch. Draft generated from `pacman -Qqe` on rootbook (2026-09-25).
+# Groups can later be switched on/off per machine (e.g. hardware, work).
+
+packages:
+  base:
+    pacman:
+      - base
+      - base-devel
+      - linux
+      - linux-firmware
+      - grub
+      - efibootmgr
+      - sudo
+      - git
+      - openssh
+      - nano
+      - zsh
+      - zsh-autosuggestions
+      - chezmoi
+      - networkmanager
+      - networkmanager-openvpn
+      - openvpn
+      - iwd                       # NetworkManager's WiFi backend
+      - pipewire
+      - pipewire-alsa
+      - pipewire-jack
+      - pipewire-pulse
+      - wireplumber
+      - bluez
+      - bluez-utils
+    aur:
+      - yay
+
+  desktop:
+    pacman:
+      - greetd
+      - greetd-tuigreet
+      - swayidle
+      - swaylock
+      - swaybg
+      - waybar
+      - wofi
+      - rofi
+      - dunst
+      - grim
+      - slurp
+      - wl-clipboard
+      - cliphist
+      - brightnessctl
+      - wlsunset
+      - wdisplays
+      - xdg-desktop-portal-wlr
+      - xorg-xwayland
+      - qt5-wayland
+      - qt6-wayland
+      - polkit-gnome              # password prompts for GUI apps; not autostarted yet
+      - seahorse
+      - nwg-look
+      - papirus-icon-theme
+      - inter-font
+      - ttf-firacode-nerd
+      - ttf-jetbrains-mono-nerd
+      - ghostty
+      - pavucontrol
+      - network-manager-applet    # provides nm-connection-editor (waybar right-click)
+      - thunar
+      - thunar-archive-plugin
+      - thunar-volman
+      - gvfs
+      - gvfs-mtp
+      - tumbler
+    aur:
+      - swayfx
+      - swayosd-git
+      - networkmanager-dmenu-git
+      - rofi-bluetooth-git
+
+  apps:
+    pacman:
+      - bitwarden
+      - signal-desktop
+      - mattermost-desktop
+      - geary
+      - libreoffice-fresh
+      - code
+      - ausweisapp
+      - hugo
+      - texlive-latexrecommended
+      - texlive-latexextra
+      - texlive-fontsrecommended
+      - texlive-fontsextra
+    aur:
+      - google-chrome
+      - vesktop-bin
+      - cheese
+
+  cli:
+    pacman:
+      - neovim
+      - bat
+      - btop
+      - fzf
+      - jq
+      - zoxide
+      - lazygit
+      - impala                    # WiFi TUI (iwd)
+      - just
+      - ranger
+      - mc
+      - unzip
+      - wget
+      - bind                      # dig, nslookup
+      - nmap
+      - tcpdump
+      - qrencode
+      - gemini-cli
+      - gptfdisk
+      - dosfstools
+      - ddrescue
+      - sleuthkit
+    aur:
+      - todoist-bin
+
+  devops:
+    pacman:
+      - ansible
+      - docker
+      - kubectl
+      - helm
+      - k9s
+      - kind
+      - talosctl
+      - wireguard-tools
+      - npm
+      - nvm
+      - libvirt
+      - qemu-base
+      - dnsmasq
+      - nfs-utils
+      - rpi-imager
+    aur:
+      - tilt-bin
+      - rpiusbboot-git
+
+  hardware:                       # rootbook: ASUS, Intel Alder Lake
+    pacman:
+      - intel-media-driver
+      - libva-utils
+      - vulkan-intel
+      - sof-firmware
+      - alsa-firmware
+      - bolt                      # Thunderbolt
+      - solaar                    # Logitech devices
+      - tlp                       # power management + battery charge limit
+      - tlp-rdw
+      - powertop                  # diagnostics only; its auto-tune service stays disabled
+    aur:
+      - r8152-dkms                # Realtek USB ethernet adapter
+
+  work:
+    aur:
+      - intune-portal-bin
+
+# Installed now but NOT carried over. Move a line back up if you still want it.
+#   X11 / i3 leftovers:  arandr autorandr dmenu feh xclip xterm redshift dex
+#   unused login managers (greetd is active):  lightdm lxdm xorg-xdm
+#   unused on sway:      hyprshot (Hyprland tool)  awww (swaybg is used)
+#   duplicates:          discord (vesktop-bin)  dhcpcd (NetworkManager does DHCP)
+#   probably accidental: mattermost (the server; the client is mattermost-desktop)
+#   unclear:             vulkan-radeon (AMD driver on an Intel laptop)
+#                        wireguard-go-git (userspace WireGuard; kernel module + wireguard-tools suffice)

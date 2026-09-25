@@ -8,3 +8,6 @@
 .Xresources
 {{ end }}
 
+
+# files for /etc, installed by the system script, not copied to ~
+system/

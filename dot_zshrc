@@ -17,6 +17,7 @@ alias nano='nvim'
 alias vi='nvim'
 alias vim='nvim'
 alias nosleep='systemd-inhibit --what=sleep --why="long-running task"'
+alias fullcharge='sudo tlp fullcharge'   # charge to 100% until next boot (default limit 80%)
 
 export PATH="$HOME/.local/bin:$PATH"
 
