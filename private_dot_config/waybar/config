@@ -9,7 +9,7 @@
 
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["clock"],
-    "modules-right": ["pulseaudio", "backlight", "sway/language", "battery", "tray"],
+    "modules-right": ["pulseaudio", "backlight", "sway/language", "network", "battery", "tray"],
 
     "sway/workspaces": {
         "disable-scroll": true,
@@ -48,6 +48,16 @@
 
     "backlight": {
         "format": "  {percent}%"
+    },
+
+    "network": {
+        "format-wifi": "  {essid} {signalStrength}%",
+        "format-ethernet": "  {ipaddr}",
+        "format-disconnected": "  offline",
+        "tooltip-format-wifi": "{ifname}: {ipaddr}/{cidr}\n{essid} ({signalStrength}%, {frequency} GHz)",
+        "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}",
+        "on-click": "networkmanager_dmenu",
+        "on-click-right": "nm-connection-editor"
     }
 }
 

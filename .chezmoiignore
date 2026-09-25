@@ -4,6 +4,7 @@
 .config/sway/**
 .config/waybar/**
 .config/wofi/**
+.config/networkmanager-dmenu/**
 .Xresources
 {{ end }}
 
