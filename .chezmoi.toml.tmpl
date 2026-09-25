@@ -1,7 +1,14 @@
 {{- /* Per-machine answers, asked once on `chezmoi init` and kept in ~/.config/chezmoi/chezmoi.toml */ -}}
 {{- $hardware := promptBoolOnce . "hardware" "Install rootbook hardware packages" -}}
 {{- $work := promptBoolOnce . "work" "Install work packages" -}}
+{{- $email := promptStringOnce . "vaultwarden_email" "Vaultwarden login email" -}}
 
 [data]
     hardware = {{ $hardware }}
     work = {{ $work }}
+    vaultwarden_email = {{ $email | quote }}
+
+# Templates fetch secrets with rbw, so install and configure it before they are read.
+[hooks.read-source-state.pre]
+    command = {{ joinPath .chezmoi.sourceDir ".install-password-manager.sh" | quote }}
+    args = [{{ $email | quote }}]
