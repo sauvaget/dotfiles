@@ -2,6 +2,7 @@
 .config/dunst/**
 .config/rofi/**
 .config/sway/**
+.config/waybar/**
 .Xresources
 {{ end }}
 
