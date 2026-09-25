@@ -1,0 +1,17 @@
+# System setup per package group, applied by .chezmoiscripts/run_onchange_after_20-system.sh.tmpl.
+# Files are not listed here: everything under system/<group>/ is installed to the same path under /.
+# Services are enabled (not started); they come up on the next boot.
+
+system:
+  base:
+    services: [NetworkManager, NetworkManager-dispatcher, iwd, bluetooth, systemd-timesyncd]
+  desktop:
+    services: [greetd, swayosd-libinput-backend]
+    user_groups: [video, input]
+  devops:
+    services: [docker]
+    user_groups: [docker]
+  hardware:
+    services: [tlp]
+  work:
+    user_services: [intune-agent.timer]

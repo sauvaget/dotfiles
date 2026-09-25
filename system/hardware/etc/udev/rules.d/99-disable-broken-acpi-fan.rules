@@ -1,0 +1,1 @@
+ACTION=="add", SUBSYSTEM=="platform", KERNEL=="INTC1048:00", ATTR{driver/unbind}="INTC1048:00"

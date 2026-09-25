@@ -1,0 +1,2 @@
+ACTION=="add", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="b366", RUN+="/usr/bin/solaar config 'MX Mechanical' multiplatform Windows"
+

@@ -1,0 +1,71 @@
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/bin/bash
+# Installs system/<group>/ files to /, enables services and adds the user to groups.
+# Only uses sudo when something differs. Re-runs when any file or setting below changes.
+set -euo pipefail
+
+{{- $groups := list "base" "desktop" "apps" "cli" "devops" }}
+{{- if get . "hardware" }}{{ $groups = append $groups "hardware" }}{{ end }}
+{{- if get . "work" }}{{ $groups = append $groups "work" }}{{ end }}
+
+# groups: {{ $groups | join " " }}
+# file hashes (so this script re-runs when a system file changes):
+{{- range $g := $groups }}
+{{- $dir := joinPath $.chezmoi.sourceDir "system" $g }}
+{{- if stat $dir }}
+{{ output "find" $dir "-type" "f" "-exec" "sha256sum" "{}" "+" | comment "#   " | trim }}
+{{- end }}
+{{- end }}
+
+src="{{ .chezmoi.sourceDir }}/system"
+groups=({{ $groups | join " " }})
+services=(
+{{- range $g := $groups }}{{ range get (get $.system $g | default dict) "services" | default list }} {{ . }}{{ end }}{{ end }} )
+user_services=(
+{{- range $g := $groups }}{{ range get (get $.system $g | default dict) "user_services" | default list }} {{ . }}{{ end }}{{ end }} )
+user_groups=(
+{{- range $g := $groups }}{{ range get (get $.system $g | default dict) "user_groups" | default list }} {{ . }}{{ end }}{{ end }} )
+
+same() {  # same <src> <dst>: identical content (dst may be root-only, e.g. sudoers)
+    if [ -r "$2" ]; then cmp -s "$1" "$2"; else sudo cmp -s "$1" "$2"; fi
+}
+
+changed=0
+for g in "${groups[@]}"; do
+    [ -d "$src/$g" ] || continue
+    while IFS= read -r -d '' file; do
+        dst="/${file#"$src/$g/"}"
+        [ -e "$dst" ] && same "$file" "$dst" && continue
+        mode=0644
+        if [[ $dst == /etc/sudoers.d/* ]]; then
+            mode=0440
+            visudo -cqf "$file" || { echo "system: $file is not valid sudoers syntax, skipping"; continue; }
+        fi
+        echo "system: installing $dst"
+        sudo install -D -o root -g root -m "$mode" "$file" "$dst"
+        changed=1
+    done < <(find "$src/$g" -type f -print0)
+done
+if [ "$changed" = 1 ]; then
+    sudo systemctl daemon-reload
+    sudo udevadm control --reload
+fi
+
+for s in "${services[@]}"; do
+    systemctl is-enabled --quiet "$s" 2>/dev/null && continue
+    echo "system: enabling $s"
+    sudo systemctl enable "$s"
+done
+
+for s in "${user_services[@]}"; do
+    systemctl --user is-enabled --quiet "$s" 2>/dev/null && continue
+    echo "system: enabling user unit $s"
+    systemctl --user enable "$s"
+done
+
+for grp in "${user_groups[@]}"; do
+    id -nG "$USER" | tr ' ' '\n' | grep -qx "$grp" && continue
+    echo "system: adding $USER to group $grp (takes effect at next login)"
+    sudo usermod -aG "$grp" "$USER"
+done
+{{ end -}}
