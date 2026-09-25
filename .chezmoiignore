@@ -1,6 +1,4 @@
 {{ if ne .chezmoi.os "linux" }}
-.config/i3/**
-.config/picom/**
 .config/dunst/**
 .config/rofi/**
 .config/sway/**
