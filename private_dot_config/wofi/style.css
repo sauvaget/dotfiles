@@ -1,0 +1,41 @@
+window {
+    margin: 5px;
+    border: 2px solid #5294e2;
+    background-color: rgba(43, 48, 59, 0.7); /* Semi-transparent */
+    border-radius: 12px;
+    font-family: "Ubuntu Regular";
+}
+
+#input {
+    margin: 10px;
+    border: none;
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+#inner-box {
+    margin: 10px;
+    background-color: transparent;
+}
+
+#outer-box {
+    margin: 10px;
+    background-color: transparent;
+}
+
+#scroll {
+    margin: 5px;
+}
+
+#text {
+    margin: 5px;
+    color: #ffffff;
+}
+
+#entry:selected {
+    background-color: rgba(82, 148, 226, 0.5); /* Light blue highlight */
+    border-radius: 8px;
+    outline: none;
+}
+
