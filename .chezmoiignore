@@ -3,6 +3,7 @@
 .config/picom/**
 .config/dunst/**
 .config/rofi/**
+.config/sway/**
 .Xresources
 {{ end }}
 

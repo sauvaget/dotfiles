@@ -1,0 +1,217 @@
+###############################################################################
+# VARIABLES & SETTINGS
+###############################################################################
+set $mod Mod4
+
+# Paths
+set $scripts ~/.config/sway/scripts
+
+# Core Settings
+font pango:Ubuntu Regular 11
+floating_modifier $mod
+tiling_drag $mod
+default_border pixel 1
+default_floating_border pixel 1
+
+# SwayFX Aesthetics
+corner_radius 8
+shadows enabled
+shadow_blur_radius 20
+shadow_color #00000077
+
+blur enable
+blur_radius 7
+blur_passes 3
+
+# Gaps
+gaps inner 10
+
+###############################################################################
+# HARDWARE CONFIGURATION
+###############################################################################
+# Zenbook Display (Native Res + 1.5x Scaling)
+output eDP-1 res 2880x1800@90Hz scale 1.5 adaptive_sync on
+
+# Input: Keyboard (German Layout)
+input "type:keyboard" {
+    xkb_layout de
+    # xkb_options caps:escape
+}
+
+# Input: Touchpad (Traditional Scrolling)
+input "type:touchpad" {
+    tap enabled
+    natural_scroll disabled
+    dwt enabled
+    click_method clickfinger
+}
+
+# Fix Cursor Scaling
+seat seat0 xcursor_theme Adwaita 24
+
+###############################################################################
+# AUTOSTART
+###############################################################################
+# Display Essentials
+exec_always swaybg -i ~/wallpapers/1r1kk9qi00961.png -m fill
+
+# System Services
+#exec_always swayosd-server
+exec_always "pkill swayosd-server; swayosd-server"
+exec wl-paste --type text --watch cliphist store 
+exec wl-paste --type image --watch cliphist store
+
+# Idle & Startup
+#exec swayidle -w \
+#    timeout 300 'swaylock -f -c 000000' \
+#    before-sleep 'swaylock -f -c 000000'
+exec swayidle -w \
+    timeout 300 'swaylock -f -c 000000' \
+    timeout 600 'brightnessctl -sd asus::kbd_backlight set 0; swaymsg "output * dpms off"' \
+        resume 'swaymsg "output * dpms on"; brightnessctl -rd asus::kbd_backlight' \
+    timeout 1800 'systemctl suspend --check-inhibitors=yes' \
+    before-sleep 'swaylock -f -c 000000' \
+    after-resume 'swaymsg "output * dpms on"'
+
+include ~/.config/sway/startup.conf
+
+###############################################################################
+# KEYBINDINGS - APPLICATIONS
+###############################################################################
+bindsym $mod+Return exec ghostty
+bindsym $mod+Shift+q kill
+bindcode $mod+40 exec wofi --show drun
+
+###############################################################################
+# KEYBINDINGS - SYSTEM CONTROL
+###############################################################################
+bindsym $mod+l exec swaylock -f -c 000000
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit Sway?' -b 'Yes' 'swaymsg exit'
+
+# Hardware Keys (SwayOSD)
+bindsym --locked XF86AudioMute         exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym --locked XF86AudioRaiseVolume  exec swayosd-client --output-volume raise
+bindsym --locked XF86AudioLowerVolume  exec swayosd-client --output-volume lower
+bindsym --locked XF86MonBrightnessUp    exec swayosd-client --brightness raise
+bindsym --locked XF86MonBrightnessDown  exec swayosd-client --brightness lower
+
+# Clipboard History (Cliphist + Wofi)
+#bindsym $mod+v exec cliphist list | wofi --dmenu | cliphist decode | wl-copy
+bindsym $mod+Shift+v exec "cliphist list | wofi --dmenu | cliphist decode | wl-copy"
+###############################################################################
+# NAVIGATION & LAYOUT
+###############################################################################
+# Focus
+bindsym $mod+Left  focus left
+bindsym $mod+Down  focus down
+bindsym $mod+Up    focus up
+bindsym $mod+Right focus right
+
+# Move
+bindsym $mod+Shift+Left  move left
+bindsym $mod+Shift+Down  move down
+bindsym $mod+Shift+Up    move up
+bindsym $mod+Shift+Right move right
+
+# Layout
+bindsym $mod+h split h
+bindsym $mod+v split v
+bindsym $mod+f fullscreen toggle
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+bindsym $mod+a focus parent
+
+# Resize Mode
+mode "resize" {
+    bindsym Left   resize shrink width 10 px or 10 ppt
+    bindsym Down   resize grow height 10 px or 10 ppt
+    bindsym Up     resize shrink height 10 px or 10 ppt
+    bindsym Right  resize grow width 10 px or 10 ppt
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+}
+bindsym $mod+r mode "resize"
+
+###############################################################################
+# WORKSPACES
+###############################################################################
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+###############################################################################
+# COLORS & WINDOW RULES
+###############################################################################
+set $bg-color       #2f343f
+set $white          #ffffff
+set $darkgrey       #444444
+set $grey           #b0b5bd
+set $urgentred      #471514
+
+# Window Colors         Border      Background  Text        Indicator
+client.focused          $bg-color   $bg-color   $white      #ededed
+client.unfocused        $darkgrey   $darkgrey   $grey       #ededed
+client.focused_inactive $darkgrey   $darkgrey   $grey       #ededed
+client.urgent           $urgentred  $urgentred  $white      #ededed
+
+# SwayFX Blur for Kitty
+for_window [app_id="kitty"] blur enable
+
+# Apply blur to the Wofi window
+for_window [app_id="wofi"] blur enable
+for_window [app_id="wofi"] floating enable
+for_window [app_id="wofi"] border none
+
+# Start wlsunset (Lat: 52.2, Long: 9.9)
+# -t 3500: Night temperature (warm/orange)
+# -T 6500: Day temperature (cool/blue)
+#exec wlsunset -l 52.2 -L 9.9 -t 3500 -T 6500
+#exec "while [ -z \"$WAYLAND_DISPLAY\" ]; do sleep 1; done; wlsunset -l 52.2 -L 9.9 -t 3500"
+#exec wlsunset -l 52.2 -L 9.9 -t 3500 > /tmp/wlsunset.log 2>&1
+
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+exec ~/.config/hypr/reset-portals.sh
+# Stop Chrome from triggering its internal "F11" mode when maximized
+for_window [app_id="google-chrome"] {
+    fullscreen disable
+    shortcuts_inhibitor disable
+}
+
+bar {
+    swaybar_command waybar
+}

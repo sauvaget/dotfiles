@@ -1,0 +1,23 @@
+#!/bin/bash
+BAT="BAT0"
+CAP=$(cat /sys/class/power_supply/$BAT/capacity)
+STAT=$(cat /sys/class/power_supply/$BAT/status)
+
+# Pick icon based on capacity
+if [ "$CAP" -ge 80 ]; then ICON="";
+elif [ "$CAP" -ge 60 ]; then ICON="";
+elif [ "$CAP" -ge 40 ]; then ICON="";
+elif [ "$CAP" -ge 20 ]; then ICON="";
+else ICON=""; fi
+
+# Add charging bolt if plugged in
+[ "$STAT" = "Charging" ] && ICON="󱐋 $ICON"
+
+# Output for i3blocks (Line 1: full text, Line 2: short text, Line 3: color)
+echo "<span size='large'>$ICON </span> $CAP%"
+echo "$CAP%"
+
+if [ "$STAT" = "Discharging" ]; then
+    [ "$CAP" -le 20 ] && echo "#FF5555"
+    [ "$CAP" -le 5 ] && exit 33
+fi
