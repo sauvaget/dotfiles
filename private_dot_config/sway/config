@@ -189,8 +189,8 @@ client.unfocused        $darkgrey   $darkgrey   $grey       #ededed
 client.focused_inactive $darkgrey   $darkgrey   $grey       #ededed
 client.urgent           $urgentred  $urgentred  $white      #ededed
 
-# SwayFX Blur for Kitty
-for_window [app_id="kitty"] blur enable
+# SwayFX Blur for Ghostty
+for_window [app_id="com.mitchellh.ghostty"] blur enable
 
 # Apply blur to the Wofi window
 for_window [app_id="wofi"] blur enable
