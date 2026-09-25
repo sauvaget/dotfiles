@@ -16,6 +16,7 @@ alias cat='bat --paging=never'
 alias nano='nvim'
 alias vi='nvim'
 alias vim='nvim'
+alias nosleep='systemd-inhibit --what=sleep --why="long-running task"'
 
 export PATH="$HOME/.local/bin:$PATH"
 
