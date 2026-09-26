@@ -1,10 +1,10 @@
 {{- /* Per-machine answers, asked once on `chezmoi init` and kept in ~/.config/chezmoi/chezmoi.toml */ -}}
-{{- $hardware := promptBoolOnce . "hardware" "Install rootbook hardware packages" -}}
+{{- $rootbook := promptBoolOnce . "rootbook" "Is this the rootbook (ASUS) laptop" -}}
 {{- $work := promptBoolOnce . "work" "Install work packages" -}}
 {{- $email := promptStringOnce . "vaultwarden_email" "Vaultwarden login email" -}}
 
 [data]
-    hardware = {{ $hardware }}
+    rootbook = {{ $rootbook }}
     work = {{ $work }}
     vaultwarden_email = {{ $email | quote }}
 

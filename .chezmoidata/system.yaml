@@ -12,7 +12,7 @@ system:
   devops:
     services: [docker]
     user_groups: [docker]
-  hardware:
+  laptop:
     services: [tlp]
   work:
     user_services: [intune-agent.timer]

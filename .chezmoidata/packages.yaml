@@ -65,6 +65,7 @@ packages:
       - ttf-jetbrains-mono-nerd
       - ghostty
       - pavucontrol
+      - solaar                    # Logitech devices (MX Mechanical)
       - network-manager-applet    # provides nm-connection-editor (waybar right-click)
       - thunar
       - thunar-archive-plugin
@@ -147,21 +148,32 @@ packages:
       - tilt-bin
       - rpiusbboot-git
 
-  hardware:                       # rootbook: ASUS, Intel Alder Lake
+  # Groups below are chosen automatically (see .chezmoitemplates/groups):
+  #   intel / amd  from the CPU vendor, laptop  when a battery exists,
+  #   rootbook     from the "Is this the rootbook" question.
+  intel:
     pacman:
       - intel-ucode               # CPU microcode (embedded by the mkinitcpio microcode hook)
       - intel-media-driver
       - libva-utils
       - vulkan-intel
-      - sof-firmware
+
+  amd:
+    pacman:
+      - amd-ucode
+      - vulkan-radeon
+
+  laptop:
+    pacman:
+      - sof-firmware              # sound firmware for modern Intel/AMD laptops
       - alsa-firmware
-      - bolt                      # Thunderbolt
-      - solaar                    # Logitech devices
+      - bolt                      # Thunderbolt / USB4
       - tlp                       # power management + battery charge limit
       - tlp-rdw
       - powertop                  # diagnostics only; its auto-tune service stays disabled
-    aur:
-      - r8152-dkms                # Realtek USB ethernet adapter
+
+  rootbook: {}                    # ASUS, Intel Alder Lake: no extra packages, only system/rootbook/ files
+                                  # (the dock's RTL8156 2.5G LAN works with the in-kernel r8152 driver)
 
   work:
     aur:

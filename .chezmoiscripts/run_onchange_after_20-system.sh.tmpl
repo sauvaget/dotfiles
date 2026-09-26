@@ -4,9 +4,7 @@
 # Only uses sudo when something differs. Re-runs when any file or setting below changes.
 set -euo pipefail
 
-{{- $groups := list "base" "desktop" "apps" "cli" "devops" }}
-{{- if get . "hardware" }}{{ $groups = append $groups "hardware" }}{{ end }}
-{{- if get . "work" }}{{ $groups = append $groups "work" }}{{ end }}
+{{- $groups := includeTemplate "groups" . | trim | splitList " " }}
 
 # groups: {{ $groups | join " " }}
 # file hashes (so this script re-runs when a system file changes):

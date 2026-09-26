@@ -4,9 +4,7 @@
 # Re-runs whenever the rendered list changes. Never removes anything.
 set -euo pipefail
 
-{{- $groups := list "base" "desktop" "apps" "cli" "devops" }}
-{{- if get . "hardware" }}{{ $groups = append $groups "hardware" }}{{ end }}
-{{- if get . "work" }}{{ $groups = append $groups "work" }}{{ end }}
+{{- $groups := includeTemplate "groups" . | trim | splitList " " }}
 
 # groups: {{ $groups | join " " }}
 pacman_pkgs=(

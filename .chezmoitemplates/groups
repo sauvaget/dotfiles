@@ -1,0 +1,15 @@
+{{- /*
+  Package/system groups for this machine, as a space-separated list.
+  Used by the 10-packages and 20-system scripts: includeTemplate "groups" . | splitList " "
+    always:        base desktop apps cli devops
+    intel / amd:   detected from the CPU vendor
+    laptop:        detected when a battery exists
+    rootbook/work: answers from .chezmoi.toml.tmpl
+*/ -}}
+{{- $g := list "base" "desktop" "apps" "cli" "devops" -}}
+{{- $cpu := output "sh" "-c" "grep -m1 -oE 'GenuineIntel|AuthenticAMD' /proc/cpuinfo || true" | trim -}}
+{{- if eq $cpu "GenuineIntel" }}{{ $g = append $g "intel" }}{{ else if eq $cpu "AuthenticAMD" }}{{ $g = append $g "amd" }}{{ end -}}
+{{- if output "sh" "-c" "ls /sys/class/power_supply 2>/dev/null | grep -q '^BAT' && echo yes || true" | trim }}{{ $g = append $g "laptop" }}{{ end -}}
+{{- if get . "rootbook" }}{{ $g = append $g "rootbook" }}{{ end -}}
+{{- if get . "work" }}{{ $g = append $g "work" }}{{ end -}}
+{{- $g | join " " -}}
