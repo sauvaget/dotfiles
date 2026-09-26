@@ -17,6 +17,7 @@ packages:
       - zsh
       - zsh-autosuggestions
       - chezmoi
+      - rbw                       # Vaultwarden CLI; also installed early by .install-password-manager.sh
       - networkmanager
       - networkmanager-openvpn
       - openvpn
@@ -51,6 +52,7 @@ packages:
       - wdisplays
       - xdg-desktop-portal-wlr
       - xorg-xwayland
+      - xorg-xrdb                 # sway startup.conf merges ~/.Xresources
       - qt5-wayland
       - qt6-wayland
       - polkit-gnome              # password prompts for GUI apps; not autostarted yet
@@ -107,6 +109,8 @@ packages:
       - just
       - ranger
       - mc
+      - less
+      - man-db
       - unzip
       - wget
       - bind                      # dig, nslookup
@@ -161,7 +165,7 @@ packages:
     aur:
       - intune-portal-bin
 
-# Installed now but NOT carried over. Move a line back up if you still want it.
+# Deliberately NOT installed (removed from rootbook 2026-09-26). Move a line back up if you want it.
 #   X11 / i3 leftovers:  arandr autorandr dmenu feh xclip xterm redshift dex
 #   unused login managers (greetd is active):  lightdm lxdm xorg-xdm
 #   unused on sway:      hyprshot (Hyprland tool)  awww (swaybg is used)
