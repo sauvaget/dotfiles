@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Waybar custom/power module: shows the active TLP profile as JSON.
+# TLP switches automatically on AC/battery change (performance on AC, balanced on battery).
+
+line=$(tlp-stat -s 2>/dev/null | grep -m1 '^TLP profile')   # e.g. "TLP profile    = balanced/BAT"
+profile=${line##*= }
+profile=${profile%%/*}
+source=$([[ $line == */AC ]] && echo "AC" || echo "battery")
+
+case "$profile" in
+    performance) icon=$'' ;;   # bolt
+    balanced)    icon=$'' ;;   # balance scale
+    power-saver) icon=$'' ;;   # leaf
+    *)           icon='?'; profile=unknown ;;
+esac
+
+printf '{"text": "%s  %s", "tooltip": "TLP profile: %s (on %s)\\nClick to change", "class": "%s"}\n' \
+    "$icon" "$profile" "$profile" "$source" "$profile"

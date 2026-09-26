@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Dropdown menu to switch the TLP power profile.
+# Needs the NOPASSWD rule in /etc/sudoers.d/tlp for `tlp performance|balanced|power-saver`.
+
+current=$(tlp-stat -s 2>/dev/null | grep -m1 '^TLP profile' | sed -E 's/.*= ([a-z-]+).*/\1/')
+
+entries=(
+    $'  performance'
+    $'  balanced'
+    $'  power-saver'
+)
+for i in "${!entries[@]}"; do
+    [[ ${entries[$i]} == *"  $current" ]] && active=$i
+done
+
+choice=$(printf '%s\n' "${entries[@]}" |
+    rofi -dmenu -i -p "Power profile" -theme ~/.config/rofi/network.rasi \
+         -theme-str 'window { width: 240px; } listview { lines: 3; } inputbar { enabled: false; }' \
+         ${active:+-selected-row "$active"} -no-custom) || exit 0
+
+profile=${choice##*  }
+if sudo -n /usr/bin/tlp "$profile" >/dev/null 2>&1; then
+    notify-send -t 2000 "Power profile" "Switched to $profile"
+else
+    notify-send -u critical "Power profile" "Could not switch to $profile (sudo rule missing?)"
+fi
+pkill -RTMIN+8 -x waybar   # refresh the waybar power box

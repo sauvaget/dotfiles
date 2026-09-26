@@ -9,7 +9,7 @@
 
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["clock"],
-    "modules-right": ["pulseaudio", "backlight", "sway/language", "network", "bluetooth", "battery", "tray"],
+    "modules-right": ["pulseaudio", "backlight", "sway/language", "network", "bluetooth", "custom/power", "battery", "tray"],
 
     "sway/workspaces": {
         "disable-scroll": true,
@@ -71,6 +71,14 @@
         "tooltip-format-enumerate-connected": "{device_alias}  {device_address}",
         "tooltip-format-enumerate-connected-battery": "{device_alias}  {device_address}  {device_battery_percentage}%",
         "on-click": "rofi-bluetooth -theme ~/.config/rofi/network.rasi"
+    },
+
+    "custom/power": {
+        "exec": "~/.config/sway/scripts/power-profile-status",
+        "return-type": "json",
+        "interval": 30,
+        "signal": 8,
+        "on-click": "~/.config/sway/scripts/power-profile"
     }
 }
 
