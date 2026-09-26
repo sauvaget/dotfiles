@@ -13,7 +13,8 @@ if ! command -v yay >/dev/null; then
     echo "bootstrap: installing yay"
     tmp=$(mktemp -d)
     git clone --depth 1 https://aur.archlinux.org/yay-bin.git "$tmp/yay-bin"
-    (cd "$tmp/yay-bin" && makepkg -si --noconfirm)
+    # build, then install only yay-bin itself (not the yay-bin-debug package makepkg also produces)
+    (cd "$tmp/yay-bin" && makepkg -s --noconfirm && sudo pacman -U --noconfirm yay-bin-[0-9]*.pkg.tar.zst)
     rm -rf "$tmp"
 fi
 {{ end -}}

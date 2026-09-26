@@ -69,7 +69,7 @@ exec swayidle -w \
     timeout 300 'swaylock -f -c 000000' \
     timeout 600 'brightnessctl -sd asus::kbd_backlight set 0; swaymsg "output * dpms off"' \
         resume 'swaymsg "output * dpms on"; brightnessctl -rd asus::kbd_backlight' \
-    timeout 1800 'systemctl suspend --check-inhibitors=yes' \
+    timeout 1800 '~/.config/sway/scripts/idle-suspend' \
     before-sleep 'swaylock -f -c 000000' \
     after-resume 'swaymsg "output * dpms on"'
 

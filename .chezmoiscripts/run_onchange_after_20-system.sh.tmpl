@@ -25,9 +25,10 @@ user_services=(
 {{- range $g := $groups }}{{ range get (get $.system $g | default dict) "user_services" | default list }} {{ . }}{{ end }}{{ end }} )
 user_groups=(
 {{- range $g := $groups }}{{ range get (get $.system $g | default dict) "user_groups" | default list }} {{ . }}{{ end }}{{ end }} )
+login_shell="{{ get $.system.base "login_shell" }}"
 
-same() {  # same <src> <dst>: identical content (dst may be root-only, e.g. sudoers)
-    if [ -r "$2" ]; then cmp -s "$1" "$2"; else sudo cmp -s "$1" "$2"; fi
+same() {  # same <src> <dst>: identical content. Missing or root-only dst (e.g. in /etc/sudoers.d) is checked via sudo.
+    if [ -r "$2" ]; then cmp -s "$1" "$2"; else sudo cmp -s "$1" "$2" 2>/dev/null; fi
 }
 
 changed=0
@@ -35,7 +36,7 @@ for g in "${groups[@]}"; do
     [ -d "$src/$g" ] || continue
     while IFS= read -r -d '' file; do
         dst="/${file#"$src/$g/"}"
-        [ -e "$dst" ] && same "$file" "$dst" && continue
+        same "$file" "$dst" && continue
         mode=0644
         if [[ $dst == /etc/sudoers.d/* ]]; then
             mode=0440
@@ -68,4 +69,9 @@ for grp in "${user_groups[@]}"; do
     echo "system: adding $USER to group $grp (takes effect at next login)"
     sudo usermod -aG "$grp" "$USER"
 done
+
+if [ -n "$login_shell" ] && [ "$(getent passwd "$USER" | cut -d: -f7)" != "$login_shell" ]; then
+    echo "system: changing login shell to $login_shell (takes effect at next login)"
+    sudo chsh -s "$login_shell" "$USER"
+fi
 {{ end -}}

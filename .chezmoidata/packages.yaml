@@ -138,7 +138,7 @@ packages:
       - npm
       - nvm
       - libvirt
-      - qemu-base
+      - qemu-desktop              # includes qemu-base + GTK display + virtio-gpu (test VM)
       - dnsmasq
       - nfs-utils
       - rpi-imager

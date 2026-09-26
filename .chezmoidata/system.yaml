@@ -5,6 +5,7 @@
 system:
   base:
     services: [NetworkManager, NetworkManager-dispatcher, iwd, bluetooth, systemd-timesyncd]
+    login_shell: /usr/bin/zsh
   desktop:
     services: [greetd, swayosd-libinput-backend]
     user_groups: [video, input]
