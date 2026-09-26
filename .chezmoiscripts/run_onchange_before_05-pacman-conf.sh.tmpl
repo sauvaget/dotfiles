@@ -1,0 +1,13 @@
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/bin/bash
+# Installs pacman.conf before the package script runs, so its settings (e.g. NoExtract for
+# the microcode images) already apply to those installs. The system script would do it too, but later.
+# pacman.conf hash: {{ include "system/base/etc/pacman.conf" | sha256sum }}
+set -euo pipefail
+
+src="{{ .chezmoi.sourceDir }}/system/base/etc/pacman.conf"
+if ! cmp -s "$src" /etc/pacman.conf; then
+    echo "pacman-conf: installing /etc/pacman.conf"
+    sudo install -o root -g root -m 0644 "$src" /etc/pacman.conf
+fi
+{{ end -}}

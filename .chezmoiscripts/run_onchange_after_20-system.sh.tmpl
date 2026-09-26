@@ -45,11 +45,16 @@ for g in "${groups[@]}"; do
         echo "system: installing $dst"
         sudo install -D -o root -g root -m "$mode" "$file" "$dst"
         changed=1
+        [[ $dst == /etc/mkinitcpio.conf* ]] && initramfs=1
     done < <(find "$src/$g" -type f -print0)
 done
 if [ "$changed" = 1 ]; then
     sudo systemctl daemon-reload
     sudo udevadm control --reload
+fi
+if [ "${initramfs:-0}" = 1 ]; then
+    echo "system: mkinitcpio config changed, rebuilding initramfs"
+    sudo mkinitcpio -P
 fi
 
 for s in "${services[@]}"; do

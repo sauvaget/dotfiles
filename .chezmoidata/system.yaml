@@ -4,7 +4,7 @@
 
 system:
   base:
-    services: [NetworkManager, NetworkManager-dispatcher, iwd, bluetooth, systemd-timesyncd]
+    services: [NetworkManager, NetworkManager-dispatcher, iwd, bluetooth, systemd-timesyncd, fstrim.timer, paccache.timer]
     login_shell: /usr/bin/zsh
   desktop:
     services: [greetd, swayosd-libinput-backend]

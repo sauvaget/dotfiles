@@ -18,6 +18,7 @@ packages:
       - zsh-autosuggestions
       - chezmoi
       - rbw                       # Vaultwarden CLI; also installed early by .install-password-manager.sh
+      - pacman-contrib            # paccache (+ paccache.timer), checkupdates, pactree
       - networkmanager
       - networkmanager-openvpn
       - openvpn
@@ -148,6 +149,7 @@ packages:
 
   hardware:                       # rootbook: ASUS, Intel Alder Lake
     pacman:
+      - intel-ucode               # CPU microcode (embedded by the mkinitcpio microcode hook)
       - intel-media-driver
       - libva-utils
       - vulkan-intel
