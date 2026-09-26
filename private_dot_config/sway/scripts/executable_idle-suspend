@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
-# swayidle's 30-minute action: suspend on battery only.
-# On AC the screen and keyboard backlight are already off (10-minute timeout), so do nothing.
+# swayidle's 30-minute action: suspend only when running on battery.
+# On AC, and on machines without a battery (desktops, VMs), the screen and keyboard
+# backlight are already off (10-minute timeout), so do nothing.
 
+has_battery=0
 for supply in /sys/class/power_supply/*; do
     case "$(cat "$supply/type" 2>/dev/null)" in
         Mains|USB) [ "$(cat "$supply/online" 2>/dev/null)" = 1 ] && exit 0 ;;
+        Battery)   has_battery=1 ;;
     esac
 done
+[ "$has_battery" = 1 ] || exit 0
 
 exec systemctl suspend --check-inhibitors=yes
