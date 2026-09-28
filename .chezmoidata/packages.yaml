@@ -46,6 +46,7 @@ packages:
       - dunst
       - grim
       - slurp
+      - satty                     # screenshot annotation (sway/scripts/screenshot edit)
       - wl-clipboard
       - cliphist
       - brightnessctl

@@ -99,6 +99,13 @@ bindsym --locked XF86MonBrightnessDown  exec swayosd-client --brightness lower
 # Clipboard History (Cliphist + Wofi)
 #bindsym $mod+v exec cliphist list | wofi --dmenu | cliphist decode | wl-copy
 bindsym $mod+Shift+v exec "cliphist list | wofi --dmenu | cliphist decode | wl-copy"
+
+# Screenshots (saved to ~/Pictures/Screenshots and copied to the clipboard)
+bindsym Print         exec ~/.config/sway/scripts/screenshot region
+bindsym Shift+Print   exec ~/.config/sway/scripts/screenshot screen
+bindsym Alt+Print     exec ~/.config/sway/scripts/screenshot window
+bindsym Ctrl+Print    exec ~/.config/sway/scripts/screenshot edit
+bindsym $mod+Shift+s  exec ~/.config/sway/scripts/screenshot edit
 ###############################################################################
 # NAVIGATION & LAYOUT
 ###############################################################################
