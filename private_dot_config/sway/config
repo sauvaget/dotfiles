@@ -33,9 +33,11 @@ gaps inner 10
 # change on every dock plug-in, and eDP-1 would also match other laptops' panels.
 # Layout at the desk (arranged in wdisplays):
 #   [HP ...XWM] [HP ...XWR, 661 px lower]
-#        [Zenbook, below the left monitor]
+#        [laptop, below the left monitor]
 # Zenbook Display (Native Res + 1.5x Scaling)
 output "Samsung Display Corp. 0x4171 Unknown" res 2880x1800@90Hz scale 1.5 adaptive_sync on position 1920 2160
+# Dell Pro Max 14 display (1920x1200, same logical size as the Zenbook at 1.5)
+output "LG Display 0x07A6 Unknown" scale 1 position 1920 2160
 # Docking station: two HP 27f 4k
 output "HP Inc. HP 27f 4k 3CM0270XWM" scale 1 position 0 0
 output "HP Inc. HP 27f 4k 3CM0270XWR" scale 1 position 3840 661
