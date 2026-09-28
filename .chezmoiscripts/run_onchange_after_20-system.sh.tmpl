@@ -46,6 +46,7 @@ for g in "${groups[@]}"; do
         case "$dst" in
             /etc/mkinitcpio.conf*) initramfs=1 ;;
             /etc/default/grub)     grubcfg=1 ;;
+            /etc/tlp.d/*)          tlpconf=1 ;;
         esac
     done < <(find "$src/$g" -type f -print0)
 done
@@ -65,6 +66,10 @@ if [ "${grubcfg:-0}" = 1 ]; then
     else
         echo "system: GRUB is not the bootloader here, skipping grub-mkconfig"
     fi
+fi
+if [ "${tlpconf:-0}" = 1 ] && command -v tlp >/dev/null; then
+    echo "system: TLP config changed, applying it"
+    sudo tlp start >/dev/null
 fi
 
 for s in "${services[@]}"; do
