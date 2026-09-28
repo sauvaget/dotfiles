@@ -44,7 +44,7 @@ for g in "${groups[@]}"; do
         sudo install -D -o root -g root -m "$mode" "$file" "$dst"
         changed=1
         case "$dst" in
-            /etc/mkinitcpio.conf*) initramfs=1 ;;
+            /etc/mkinitcpio.conf*|/etc/modprobe.d/*) initramfs=1 ;;
             /etc/default/grub)     grubcfg=1 ;;
             /etc/tlp.d/*)          tlpconf=1 ;;
         esac

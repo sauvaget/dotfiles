@@ -173,6 +173,8 @@ packages:
       - tlp-rdw
       - powertop                  # diagnostics only; its auto-tune service stays disabled
 
+  nvidia: {}                      # unused NVIDIA GPU: no packages, only system/nvidia/ (keep it asleep)
+
   rootbook: {}                    # ASUS, Intel Alder Lake: no extra packages, only system/rootbook/ files
                                   # (the dock's RTL8156 2.5G LAN works with the in-kernel r8152 driver)
 
