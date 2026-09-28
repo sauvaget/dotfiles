@@ -58,8 +58,13 @@ if [ "${initramfs:-0}" = 1 ]; then
     sudo mkinitcpio -P
 fi
 if [ "${grubcfg:-0}" = 1 ]; then
-    echo "system: /etc/default/grub changed, regenerating grub.cfg"
-    sudo grub-mkconfig -o /boot/grub/grub.cfg
+    # Only where GRUB is the bootloader (e.g. not on systemd-boot installs); /boot may be root-only.
+    if sudo test -f /boot/grub/grub.cfg; then
+        echo "system: /etc/default/grub changed, regenerating grub.cfg"
+        sudo grub-mkconfig -o /boot/grub/grub.cfg
+    else
+        echo "system: GRUB is not the bootloader here, skipping grub-mkconfig"
+    fi
 fi
 
 for s in "${services[@]}"; do
