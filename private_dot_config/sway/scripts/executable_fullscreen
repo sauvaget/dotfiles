@@ -1,0 +1,62 @@
+#!/bin/bash
+# $mod+f: "fake fullscreen" that keeps waybar visible.
+#
+# Sway's fullscreen covers the bar and sets the Wayland fullscreen state on the
+# client (Chrome then enters its own F11 mode: no tabs, no address bar). Instead
+# we float the focused window over the whole workspace area, so the bar stays
+# visible and the app never learns it is fullscreen. Pressing $mod+f again
+# re-tiles it in its old spot.
+#
+# Sway re-inserts a window leaving floating mode right after the focused tile,
+# so we remember the window's neighbour when going fullscreen and focus it
+# before re-tiling.
+
+mark=_fakefs
+state=${XDG_RUNTIME_DIR:-/tmp}/sway-fakefs
+mkdir -p "$state"
+
+tree=$(swaymsg -t get_tree)
+focused=$(jq -c '.. | objects | select(.focused? == true)' <<<"$tree")
+id=$(jq -r '.id' <<<"$focused")
+
+exists() { jq -e --argjson c "$1" '[.. | objects | select(.id? == $c)] | length > 0' <<<"$tree" >/dev/null; }
+
+# Already fake-fullscreen: put it back into the tiling layout.
+if jq -e --arg m "$mark" '.marks | index($m)' <<<"$focused" >/dev/null; then
+    read -r prev next layout 2>/dev/null <"$state/$id"
+    rm -f "$state/$id"
+    if [[ $prev != null && -n $prev ]] && exists "$prev"; then
+        # Inserted right after the previous sibling: its old position.
+        swaymsg "[con_id=$prev] focus; [con_id=$id] floating disable, unmark $mark; [con_id=$id] focus"
+    elif [[ $next != null && -n $next ]] && exists "$next"; then
+        # It was first in its container: insert after the next sibling, then
+        # move it back in front of it.
+        case $layout in splitv | stacked) dir=up ;; *) dir=left ;; esac
+        swaymsg "[con_id=$next] focus; [con_id=$id] floating disable, unmark $mark; [con_id=$id] focus; move $dir"
+    else
+        swaymsg "[con_id=$id] floating disable, unmark $mark"
+    fi
+    exit
+fi
+
+# In real fullscreen (requested by the app, e.g. a video or F11): leave it.
+if [[ $(jq -r '.fullscreen_mode' <<<"$focused") != 0 ]]; then
+    swaymsg fullscreen disable
+    exit
+fi
+
+# Remember the neighbours of a tiled window (floating ones need nothing).
+if [[ $(jq -r '.type' <<<"$focused") == con ]]; then
+    jq -r --argjson c "$id" '
+        .. | objects | select(any(.nodes[]?; .id == $c))
+        | ([.nodes[].id] | to_entries[] | select(.value == $c) | .key) as $i
+        | [ (if $i > 0 then .nodes[$i-1].id else null end),
+            (.nodes[$i+1].id // null),
+            .layout ] | map(tostring) | join(" ")' <<<"$tree" >"$state/$id"
+fi
+
+# Workspace rect = usable area (excludes the bar and outer gaps).
+read -r x y w h < <(swaymsg -t get_workspaces |
+    jq -r '.[] | select(.focused) | .rect | "\(.x) \(.y) \(.width) \(.height)"')
+
+swaymsg "[con_id=$id] floating enable, mark --add $mark, resize set width $w px height $h px, move absolute position $x px $y px"
